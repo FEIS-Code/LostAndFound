@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Five Elements International School <br> Lost & Found</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Lucide icons for aesthetics -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -13,31 +12,25 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7fafc;
         }
-        /* Custom scrollbar for aesthetics */
-        .report-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        .report-container::-webkit-scrollbar-thumb {
-            background-color: #9ca3af;
-            border-radius: 10px;
-        }
+        .report-container::-webkit-scrollbar { width: 8px; }
+        .report-container::-webkit-scrollbar-thumb { background-color: #9ca3af; border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen">
 
     <header class="bg-white shadow-md p-4 sticky top-0 z-10">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center">
-            <!-- Updated H1 to color every word and the ampersand -->
-            <h1 class="text-3xl font-extrabold tracking-tight mb-2 sm:mb-0">
+            
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-center sm:text-left mb-4 sm:mb-0">
                 <span class="text-red-800">Five</span>
                 <span class="text-yellow-500">Elements</span>
                 <span class="text-red-800">International</span>
-                <span class="text-yellow-500">School</span>
-                <span class="text-red-800">Lost</span>
+                <span class="text-yellow-500">School</span> <br class="sm:hidden"> <span class="text-red-800">Lost</span>
                 <span class="text-yellow-500">&</span>
                 <span class="text-yellow-500">Found</span>
             </h1>
-            <div class="flex space-x-2">
+            
+            <div class="flex flex-col space-y-2 w-full sm:w-auto sm:flex-row sm:space-y-0 sm:space-x-2">
                 <button
                     onclick="openReportModal(true)"
                     class="px-4 py-2 bg-red-800 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-200"
@@ -55,90 +48,81 @@
     </header>
 
     <main class="max-w-7xl mx-auto p-4 sm:p-6">
-       
-        <!-- Filter and Search Bar -->
+        
         <div class="space-y-4 mb-6 p-4 bg-white rounded-xl shadow-lg">
             <div class="relative flex-grow">
                 <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
                 <input
                     type="text"
                     id="search-term"
-                    placeholder="Search by item, description, or location..."
+                    placeholder="Search by item, description..."
                     oninput="handleFilterChange()"
                     class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition"
                 />
             </div>
 
-            <div class="flex flex-wrap gap-3 items-center">
-                <label class="text-sm font-medium text-gray-700">Filter:</label>
-                <!-- Type Filter -->
+            <div class="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:flex-wrap sm:gap-3 sm:items-center">
+                <label class="text-sm font-medium text-gray-700 hidden sm:block">Filter:</label>
+                
                 <select id="filter-type" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="all">All Types</option>
-                    <option value="lost">Lost</option>
+                    <option value="all">Active Reports (Not Claimed)</option> <option value="lost">Lost</option>
                     <option value="found">Found</option>
-                </select>
+                    <option value="claimed">Claimed</option> </select>
 
-                <!-- Category Filter -->
                 <select id="filter-category" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="All Categories">All Categories</option>
-                    <!-- Options populated by JS -->
                 </select>
-               
-                <!-- Grade Filter (New filters from Python context) -->
+                
                 <select id="filter-grade" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="All Grades">All Grades</option>
-                    <!-- Options populated by JS -->
                 </select>
-               
             </div>
         </div>
-       
-        <!-- Report List Container -->
+        
         <div id="report-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
-            <!-- Report Cards will be injected here by JavaScript -->
-        </div>
+            </div>
 
         <div id="no-reports-message" class="hidden p-8 text-center bg-white rounded-xl shadow-lg mt-8">
             <p class="text-xl text-gray-500 font-medium">No reports found matching your criteria.</p>
         </div>
-
     </main>
-
-    <!-- Report Modal (Hidden by default) -->
-    <div id="report-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
-        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg m-4">
-            <div id="modal-header" class="flex justify-between items-center mb-4 border-b pb-2">
-                <h2 id="modal-title" class="text-2xl font-bold"></h2>
+<footer class="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-center text-gray-500">
+        <p class="font-semibold mb-2 text-lg">
+            An App by <span class="text-indigo-600 font-bold">Team Seekers</span>
+        </p>
+        <p class="text-sm">
+            Sreshta (Grade 9) • Sai Raghava (Grade 8) • Sowmya (Grade 8)
+        </p>
+        <p class="text-sm">
+            Soham Varma (Grade 7) • Skanda (Grade 7)
+        </p>
+    </footer>
+    <div id="report-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm p-4 overflow-y-auto">
+        
+        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg m-4 max-h-[90vh] flex flex-col">
+            <div id="modal-header" class="flex justify-between items-center mb-4 border-b pb-2 flex-shrink-0"> <h2 id="modal-title" class="text-2xl font-bold"></h2>
                 <button onclick="closeReportModal()" class="text-gray-400 hover:text-gray-600 transition">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
-           
-            <form id="report-form" class="space-y-4">
-               
-                <!-- Auto-Generated Title Display -->
+            
+            <form id="report-form" class="space-y-4 overflow-y-auto p-1">
+                
                 <div id="auto-title-display" class="p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-700 font-medium">
-                    Report Title: <span id="generated-item-name" class="font-semibold"></span> (Auto-generated from Category)
+                    Report Title: <span id="generated-item-name" class="font-semibold"></span>
                 </div>
 
-                <!-- Media Upload Field (UPDATED TO USE REAL FILE INPUT AND PREVIEW) -->
                 <div class="border border-dashed border-gray-400 rounded-xl p-4 text-center space-y-3">
                     <label for="report-image-input" class="block text-sm font-medium text-gray-700 cursor-pointer">
                         <span class="inline-flex items-center text-indigo-600">
                             <i data-lucide="image" class="w-4 h-4 mr-2"></i>
-                            Optional: Upload Item Photo
+                            Optional: Upload Photo (Max 350KB)
                         </span>
                     </label>
-                    <input
-                        type="file"
-                        id="report-image-input"
-                        accept="image/*"
-                        onchange="handleImageUpload(event)"
-                        class="hidden"
-                    >
+                    <input type="file" id="report-image-input" accept="image/*" onchange="handleImageUpload(event)" class="hidden">
                     <div id="image-preview-container" class="mt-2 hidden">
                         <img id="image-preview" src="" alt="Image Preview" class="max-h-32 w-auto mx-auto rounded-lg object-contain shadow-md border border-gray-200">
                         <p id="image-filename" class="text-xs text-gray-500 mt-1 truncate"></p>
@@ -148,66 +132,34 @@
                     </button>
                 </div>
 
-
-                <!-- Category Fields -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="report-category" class="block text-sm font-medium text-gray-700">Item Category</label>
-                        <select
-                            id="report-category"
-                            onchange="updateGeneratedTitle()"
-                            required
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
-                        >
-                            <!-- Options populated by JS -->
+                        <select id="report-category" onchange="updateGeneratedTitle()" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border">
                         </select>
                     </div>
                     <div>
                         <label for="report-grade" class="block text-sm font-medium text-gray-700">Grade Level</label>
-                        <select
-                            id="report-grade"
-                            required
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
-                        >
-                            <!-- Options populated by JS -->
+                        <select id="report-grade" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border">
                         </select>
                     </div>
                     <div>
                         <label for="report-section" class="block text-sm font-medium text-gray-700">Section/Class</label>
-                        <select
-                            id="report-section"
-                            required
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
-                        >
-                            <!-- Options populated by JS -->
+                        <select id="report-section" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border">
                         </select>
                     </div>
                 </div>
-               
-                <!-- Unique Description -->
+                
                 <div>
                     <label for="report-description" class="block text-sm font-medium text-gray-700">Unique Description</label>
-                    <textarea
-                        id="report-description"
-                        placeholder="e.g., Has a key-chain of a dog, small tear on the top right pocket, etc. (crucial for identification!)"
-                        rows="3"
-                        required
-                        class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
-                    ></textarea>
+                    <textarea id="report-description" placeholder="e.g., Has a key-chain of a dog..." rows="3" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"></textarea>
                 </div>
-               
-                <!-- Location -->
+                
                 <div>
                     <label for="report-location" class="block text-sm font-medium text-gray-700">Location (Lost or Found)</label>
-                    <input
-                        id="report-location"
-                        type="text"
-                        placeholder="e.g., Cafeteria, Hallway near Room 101, Gym locker room"
-                        required
-                        class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
-                    />
+                    <input id="report-location" type="text" placeholder="e.g., Cafeteria, Gym locker room" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"/>
                 </div>
-               
+                
                 <button
                     type="submit"
                     id="submit-button"
@@ -219,211 +171,227 @@
             </form>
         </div>
     </div>
+
 <script>
-        // --- Configuration ---
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRwPFCXy1BSyeI3hvHWXN7XZXSezpQFwBPPID6DL12AKRlrdzJdyGTzvvP69o4h39SIg/exec'; // <-- IMPORTANT!
+    // --- Configuration ---
+    // Make sure this URL is correct!
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRwPFCXy1BSyeI3hvHWXN7XZXSezpQFwBPPID6DL12AKRlrdzJdyGTzvvP69o4h39SIg/exec';
 
-        const ITEM_CATEGORIES = [
-            'Backpack', 'Lunchbox', 'Textbook', 'Clothing', 'Electronics',
-            'Water Bottle', 'Keys', 'Documents/IDs', 'Sports Gear', 'Other'
-        ];
-        const GRADE_LEVELS = [
-            'Kindergarten', '1st Grade', '2nd Grade', '3rd Grade',
-            '4th Grade', '5th Grade', '6th Grade', '7th Grade', '8th Grade',
-            '9th Grade', 'Staff'
-        ];
-        const SECTION_LETTERS = [
-            'A', 'B', 'C', 'D', 'E', 'F', 'General/None'
-        ];
+    const ITEM_CATEGORIES = [
+        'Backpack', 'Lunchbox', 'Textbook', 'Clothing', 'Electronics',
+        'Water Bottle', 'Keys', 'Documents/IDs', 'Sports Gear', 'Other'
+    ];
+    const GRADE_LEVELS = [
+        'Kindergarten', '1st Grade', '2nd Grade', '3rd Grade',
+        '4th Grade', '5th Grade', '6th Grade', '7th Grade', '8th Grade',
+        '9th Grade', 'Staff'
+    ];
+    const SECTION_LETTERS = [
+        'A', 'B', 'C', 'D', 'E', 'F', 'General/None'
+    ];
 
-        // This will be filled by data from Google Sheets
-        let REPORTS_DATABASE = [];
-        let isReportingLost = true;
-        const SIMULATED_USER_ID = "school-web-user-" + Math.floor(Math.random() * 1000);
-        let tempBase64Image = null;
+    let REPORTS_DATABASE = [];
+    let isReportingLost = true;
+    const SIMULATED_USER_ID = "school-web-user-" + Math.floor(Math.random() * 100000);
+    let tempBase64Image = null;
 
-        // --- Core Functions (Connected to Google Sheets) ---
+    // --- Core Functions (Connected to Google Sheets) ---
 
-        /**
-         * Fetches all reports from the Google Sheet API and renders them.
-         */
-        async function loadReports() {
-            console.log("Loading reports from Google Sheet...");
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                // Newest reports are at the end, so reverse the array
-                REPORTS_DATABASE = data.reverse();
-                renderReports();
-                console.log(`Successfully loaded ${REPORTS_DATABASE.length} reports.`);
-            } catch (error) {
-                console.error("Failed to load reports:", error);
-                document.getElementById('report-list').innerHTML = 
-                    `<p class="text-red-500 text-center col-span-full">Error loading reports. Please check the connection and script URL.</p>`;
-            }
+    async function loadReports() {
+        console.log("Loading reports from Google Sheet...");
+        try {
+            const response = await fetch(GOOGLE_SCRIPT_URL);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const data = await response.json();
+            REPORTS_DATABASE = data.reverse();
+            renderReports();
+            console.log(`Successfully loaded ${REPORTS_DATABASE.length} reports.`);
+        } catch (error) {
+            console.error("Failed to load reports:", error);
+            document.getElementById('report-list').innerHTML = 
+                `<p class="text-red-500 text-center col-span-full">Error loading reports. Please check the connection.</p>`;
         }
+    }
 
-        /**
-         * Adds a new report by POSTing it to the Google Sheet API.
-         */
-        async function addReport(isLost, category, grade, section, description, location, userId, base64Image = null) {
-            const reportType = isLost ? 'lost' : 'found';
-            const itemName = `${category} - ${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report`;
+    async function addReport(isLost, category, grade, section, description, location, userId, base64Image = null) {
+        const reportType = isLost ? 'lost' : 'found';
+        const itemName = `${category} - ${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report`;
 
-            // This is the data object that will be sent to Google Apps Script
-            const reportData = {
-                type: reportType,
-                item: itemName,
-                category: category,
-                grade: grade,
-                section: section,
-                description: description.trim(),
-                location: location.trim(),
-                user_id: userId,
-                base64_image: base64Image,
-            };
+        const reportData = {
+            type: reportType,
+            item: itemName,
+            category: category,
+            grade: grade,
+            section: section,
+            description: description.trim(),
+            location: location.trim(),
+            user_id: userId,
+            base64_image: base64Image,
+        };
 
-            console.log("Submitting new report...");
-            
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Required for simple Apps Script POST
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reportData)
-                });
-                
-                // 'no-cors' means we can't read the response, but we can assume success
-                // and just reload the reports from the source of truth (the sheet).
-                console.log("Report submitted. Reloading list.");
-                
-                // Show a brief "Submitting" message
-                document.getElementById('report-list').innerHTML = 
-                    `<p class="text-indigo-600 text-center col-span-full font-semibold">Submitting report... reloading list...</p>`;
-                
-                // Wait 2 seconds for the Google Sheet to update, then reload.
-                setTimeout(loadReports, 2000);
-
-            } catch (error) {
-                console.error("Failed to submit report:", error);
-                alert("There was an error submitting your report. Please try again.");
-            }
-        }
+        console.log("Submitting new report...");
         
-        // ... (All other functions remain the same) ...
-        // ... (handleImageUpload, populateDropdowns, filterReports, renderReports, etc.) ...
-        
-        /**
-         * Converts the selected file into a Base64 string for display/storage.
-         */
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            const previewContainer = document.getElementById('image-preview-container');
-            const previewImage = document.getElementById('image-preview');
-            const filenameText = document.getElementById('image-filename');
-            
-            tempBase64Image = null;
-            previewContainer.classList.add('hidden');
-
-            if (file) {
-                // Check file size (e.g., limit to 2MB)
-                // Google Sheets cell limit is 50,000 chars. A 2MB image is way too big.
-                // Let's limit to ~350KB, which is ~450k chars in Base64
-                if (file.size > 350 * 1024) { 
-                    alert("Image is too large! Please upload an image smaller than 350KB.");
-                    event.target.value = ''; // Clear the file input
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    tempBase64Image = e.target.result;
-                    previewImage.src = tempBase64Image;
-                    filenameText.textContent = file.name;
-                    previewContainer.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-        
-        function populateDropdowns() {
-            const categorySelect = document.getElementById('filter-category');
-            const reportCategorySelect = document.getElementById('report-category');
-            
-            const gradeSelect = document.getElementById('filter-grade');
-            const reportGradeSelect = document.getElementById('report-grade');
-            
-            const reportSectionSelect = document.getElementById('report-section');
-
-            ITEM_CATEGORIES.forEach(cat => {
-                categorySelect.add(new Option(cat, cat));
-                reportCategorySelect.add(new Option(cat, cat));
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reportData)
             });
             
-            GRADE_LEVELS.forEach(grade => {
-                gradeSelect.add(new Option(grade, grade));
-                reportGradeSelect.add(new Option(grade, grade));
-            });
-
-            SECTION_LETTERS.forEach(section => {
-                reportSectionSelect.add(new Option(section, section));
-            });
-        }
-        
-        function filterReports(reports) {
-            const filterType = document.getElementById('filter-type').value;
-            const filterCategory = document.getElementById('filter-category').value;
-            const filterGrade = document.getElementById('filter-grade').value;
-            const searchTerm = document.getElementById('search-term').value.toLowerCase();
+            console.log("Report submitted. Reloading list.");
             
-            return reports.filter(report => {
-                const typeMatch = filterType === 'all' || report.type === filterType;
-                const categoryMatch = filterCategory === 'All Categories' || report.category === filterCategory;
-                const gradeMatch = filterGrade === 'All Grades' || report.grade === filterGrade;
-                const searchMatch = searchTerm === '' ||
-                    (report.item && report.item.toLowerCase().includes(searchTerm)) ||
-                    (report.description && report.description.toLowerCase().includes(searchTerm)) ||
-                    (report.location && report.location.toLowerCase().includes(searchTerm));
-                return typeMatch && categoryMatch && gradeMatch && searchMatch;
-            });
+            document.getElementById('report-list').innerHTML = 
+                `<p class="text-indigo-600 text-center col-span-full font-semibold">Submitting report... reloading list...</p>`;
+            
+            setTimeout(loadReports, 2000);
+
+        } catch (error) {
+            console.error("Failed to submit report:", error);
+            alert("There was an error submitting your report. Please try again.");
+            loadReports();
         }
+    }
+    
+    function showClaimInstructions(id) {
+        alert(
+            "How to Claim This Item:\n\n" +
+            "Please visit the School Front Office to claim this item.\n\n" +
+            "To help the staff find it, please provide this unique Report ID:\n\n" +
+            id
+        );
+    }
 
-        function renderReports() {
-            const container = document.getElementById('report-list');
-            const noReportsMessage = document.getElementById('no-reports-message');
-            const filteredReports = filterReports(REPORTS_DATABASE);
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        const previewContainer = document.getElementById('image-preview-container');
+        const previewImage = document.getElementById('image-preview');
+        const filenameText = document.getElementById('image-filename');
+        
+        tempBase64Image = null;
+        previewContainer.classList.add('hidden');
 
-            container.innerHTML = '';
-
-            if (filteredReports.length === 0) {
-                noReportsMessage.classList.remove('hidden');
+        if (file) {
+            if (file.size > 350 * 1024) { 
+                alert("Image is too large! Please upload an image smaller than 350KB.");
+                event.target.value = '';
                 return;
             }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                tempBase64Image = e.target.result;
+                previewImage.src = tempBase64Image;
+                filenameText.textContent = file.name;
+                previewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function populateDropdowns() {
+        const typeSelect = document.getElementById('filter-type');
+        const categorySelect = document.getElementById('filter-category');
+        const reportCategorySelect = document.getElementById('report-category');
+        const gradeSelect = document.getElementById('filter-grade');
+        const reportGradeSelect = document.getElementById('report-grade');
+        const reportSectionSelect = document.getElementById('report-section');
+        
+        // Add "Claimed" to the filter
 
-            noReportsMessage.classList.add('hidden');
+        
+        ITEM_CATEGORIES.forEach(cat => {
+            categorySelect.add(new Option(cat, cat));
+            reportCategorySelect.add(new Option(cat, cat));
+        });
+        GRADE_LEVELS.forEach(grade => {
+            gradeSelect.add(new Option(grade, grade));
+            reportGradeSelect.add(new Option(grade, grade));
+        });
+        SECTION_LETTERS.forEach(section => {
+            reportSectionSelect.add(new Option(section, section));
+        });
+    }
+    
+    function filterReports(reports) {
+        const filterType = document.getElementById('filter-type').value;
+        const filterCategory = document.getElementById('filter-category').value;
+        const filterGrade = document.getElementById('filter-grade').value;
+        const searchTerm = document.getElementById('search-term').value.toLowerCase();
+        
+        return reports.filter(report => {
+            let typeMatch = false;
+            if (filterType === 'all') {
+                typeMatch = report.type !== 'claimed';
+            } else {
+                typeMatch = report.type === filterType;
+            }
             
-            filteredReports.forEach(report => {
-                const isLost = report.type === 'lost';
-                const typeColor = isLost
-                    ? 'bg-red-100 text-red-800 border-red-800'
-                    : 'bg-yellow-500 text-gray-900 border-yellow-600';
-                const cardBorder = isLost
-                    ? 'border-l-4 border-red-800'
-                    : 'border-l-4 border-yellow-500';
-                const typeIcon = isLost ? 'x' : 'search';
-                
-                // Use the base64_image field from the sheet
-                const hasImage = !!report.base64_image;
-                const mediaIcon = hasImage ? 'camera' : 'file-text';
-                
-                const cardHtml = `
-                    <div class="p-4 bg-white rounded-xl shadow-lg transition duration-300 hover:shadow-xl ${cardBorder}">
+            const categoryMatch = filterCategory === 'All Categories' || report.category === filterCategory;
+            const gradeMatch = filterGrade === 'All Grades' || report.grade === filterGrade;
+            const searchMatch = searchTerm === '' ||
+                (report.item && report.item.toLowerCase().includes(searchTerm)) ||
+                (report.description && report.description.toLowerCase().includes(searchTerm)) ||
+                (report.location && report.location.toLowerCase().includes(searchTerm));
+            
+            return typeMatch && categoryMatch && gradeMatch && searchMatch;
+        });
+    }
+
+    function renderReports() {
+        const container = document.getElementById('report-list');
+        const noReportsMessage = document.getElementById('no-reports-message');
+        const filteredReports = filterReports(REPORTS_DATABASE);
+
+        container.innerHTML = '';
+        if (filteredReports.length === 0) {
+            noReportsMessage.classList.remove('hidden');
+            return;
+        }
+        noReportsMessage.classList.add('hidden');
+        
+        filteredReports.forEach(report => {
+            const isClaimed = report.type === 'claimed';
+            
+            let typeColor, cardBorder, typeIcon;
+
+            if (isClaimed) {
+                typeColor = 'bg-gray-100 text-gray-600 border-gray-400';
+                cardBorder = 'border-l-4 border-gray-400';
+                typeIcon = 'check-circle';
+            } else if (report.type === 'lost') {
+                typeColor = 'bg-red-100 text-red-800 border-red-800';
+                cardBorder = 'border-l-4 border-red-800';
+                typeIcon = 'x';
+            } else { // 'found'
+                typeColor = 'bg-yellow-500 text-gray-900 border-yellow-600';
+                cardBorder = 'border-l-4 border-yellow-500';
+                typeIcon = 'search';
+            }
+
+            const hasImage = !!report.base64_image;
+            const mediaIcon = hasImage ? 'camera' : 'file-text';
+            
+            let claimButtonHtml = '';
+            if (isClaimed) {
+                claimButtonHtml = `
+                    <div class="mt-4 p-2 text-center bg-gray-100 rounded-lg text-gray-700 font-medium text-sm">
+                        This item has been claimed.
+                    </div>`;
+            } else {
+                claimButtonHtml = `
+                    <button 
+                        onclick="showClaimInstructions('${report.id}')"
+                        class="w-full mt-4 py-2 px-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-200 text-sm flex items-center justify-center">
+                        <i data-lucide="info" class="w-4 h-4 mr-2"></i>
+                        How to Claim This Item
+                    </button>`;
+            }
+            
+            const cardHtml = `
+                <div class="p-4 bg-white rounded-xl shadow-lg transition duration-300 hover:shadow-xl ${cardBorder} flex flex-col justify-between">
+                    <div>
                         <div class="flex justify-between items-start mb-2">
                             <div class="text-xl font-bold text-gray-800 capitalize">
                                 ${report.item || 'Item'}
@@ -435,7 +403,7 @@
 
                         ${hasImage ? `
                             <div class="mb-3 p-2 bg-gray-50 rounded-lg text-center border">
-                                <img src="${report.base64_image}" alt="Item Photo" class="max-h-24 w-auto mx-auto rounded object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100/eeeeee/333333?text=Image+Error';" />
+                                <img src="${report.base64_image}" alt="Item Photo" class="max-h-24 w-auto mx-auto rounded object-contain" />
                             </div>
                         ` : `
                             <div class="mb-3 p-2 bg-indigo-50 rounded-lg flex items-center text-sm text-indigo-700">
@@ -445,115 +413,101 @@
                         `}
 
                         <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-3 border-b pb-2">
-                            <div class="flex items-center truncate">
-                                <i data-lucide="tag" class="w-3 h-3 mr-1 text-indigo-400"></i>
-                                <span class="font-semibold">Category:</span> ${report.category}
-                            </div>
-                            <div class="flex items-center truncate">
-                                <i data-lucide="users" class="w-3 h-3 mr-1 text-indigo-400"></i>
-                                <span class="font-semibold">Grade:</span> ${report.grade}
-                            </div>
-                            <div class="flex items-center truncate">
-                                <i data-lucide="hash" class="w-3 h-3 mr-1 text-indigo-400"></i>
-                                <span class="font-semibold">Section:</span> ${report.section}
-                            </div>
+                            <div class="flex items-center truncate"><i data-lucide="tag" class="w-3 h-3 mr-1 text-indigo-400"></i><span class="font-semibold">Category:</span> ${report.category}</div>
+                            <div class="flex items-center truncate"><i data-lucide="users" class="w-3 h-3 mr-1 text-indigo-400"></i><span class="font-semibold">Grade:</span> ${report.grade}</div>
+                            <div class="flex items-center truncate"><i data-lucide="hash" class="w-3 h-3 mr-1 text-indigo-400"></i><span class="font-semibold">Section:</span> ${report.section}</div>
                         </div>
-
                         <p class="text-sm text-gray-600 mb-3 line-clamp-2">${report.description}</p>
-
+                        
                         <div class="space-y-1 text-xs text-gray-500">
-                            <div class="flex items-center">
-                                <i data-lucide="map-pin" class="w-4 h-4 mr-2 text-indigo-400"></i>
-                                <span class="font-medium">Location:</span> ${report.location}
-                            </div>
-                            <div class="flex items-center">
-                                <i data-lucide="calendar" class="w-4 h-4 mr-2 text-indigo-400"></i>
-                                <span class="font-medium">Date:</span> ${report.date}
-                            </div>
+                            <div class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-2 text-indigo-400"></i><span class="font-medium">Location:</span> ${report.location}</div>
+                            <div class="flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-2 text-indigo-400"></i><span class="font-medium">Date:</span> ${report.date}</div>
                             <div class="flex items-center pt-1 mt-2 border-t border-gray-100">
                                 <i data-lucide="shield" class="w-4 h-4 mr-2 text-gray-400"></i>
-                                <span class="font-mono text-xs truncate">Reported By: ${report.user_id}</span>
+                                <span class="font-mono text-xs truncate">Report ID: ${report.id}</span>
                             </div>
                         </div>
                     </div>
-                `;
-                container.insertAdjacentHTML('beforeend', cardHtml);
-            });
-            lucide.createIcons();
-        }
+                    
+                    ${claimButtonHtml}
+                    
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', cardHtml);
+        });
+        lucide.createIcons();
+    }
+    
+    // --- Modal & UI Functions ---
 
-        function openReportModal(isLost) {
-            isReportingLost = isLost;
-            const modal = document.getElementById('report-modal');
-            const titleElement = document.getElementById('modal-title');
-            const submitButton = document.getElementById('submit-button');
-            
-            tempBase64Image = null;
-            document.getElementById('report-image-input').value = '';
-            document.getElementById('image-preview-container').classList.add('hidden');
+    function openReportModal(isLost) {
+        isReportingLost = isLost;
+        const modal = document.getElementById('report-modal');
+        const titleElement = document.getElementById('modal-title');
+        const submitButton = document.getElementById('submit-button');
+        
+        tempBase64Image = null;
+        document.getElementById('report-image-input').value = '';
+        document.getElementById('image-preview-container').classList.add('hidden');
 
-            const headerText = isLost ? 'Report a Lost Item' : 'Report an Item Found';
-            titleElement.textContent = headerText;
-            titleElement.className = `text-2xl font-bold ${isLost ? 'text-red-800' : 'text-yellow-500'}`;
-            
-            submitButton.innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 mr-2"></i> Submit ${isLost ? 'Lost' : 'Found'} Report`;
-            submitButton.className = `w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-medium transition duration-200 ${isLost
-                ? 'bg-red-800 hover:bg-red-700 text-white'
-                : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'}`;
-            
-            document.getElementById('report-form').reset();
-            updateGeneratedTitle();
-            
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            lucide.createIcons();
-        }
+        const headerText = isLost ? 'Report a Lost Item' : 'Report an Item Found';
+        titleElement.textContent = headerText;
+        titleElement.className = `text-2xl font-bold ${isLost ? 'text-red-800' : 'text-yellow-500'}`;
+        
+        submitButton.innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 mr-2"></i> Submit ${isLost ? 'Lost' : 'Found'} Report`;
+        submitButton.className = `w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-medium transition duration-200 ${isLost
+            ? 'bg-red-800 hover:bg-red-700 text-white'
+            : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'}`;
+        
+        document.getElementById('report-form').reset();
+        updateGeneratedTitle();
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        lucide.createIcons();
+    }
 
-        function closeReportModal() {
-            tempBase64Image = null;
-            document.getElementById('report-modal').classList.add('hidden');
-            document.getElementById('report-modal').classList.remove('flex');
-        }
+    function closeReportModal() {
+        tempBase64Image = null;
+        document.getElementById('report-modal').classList.add('hidden');
+        document.getElementById('report-modal').classList.remove('flex');
+    }
 
-        function updateGeneratedTitle() {
+    function updateGeneratedTitle() {
+        const category = document.getElementById('report-category').value || 'Item';
+        const typeLabel = isReportingLost ? 'Lost Report' : 'Found Report';
+        document.getElementById('generated-item-name').textContent = `${category} - ${typeLabel}`;
+    }
+
+    function handleFilterChange() {
+        renderReports();
+    }
+    
+    // --- Event Listeners and Initial Setup ---
+    
+    window.onload = function() {
+        populateDropdowns();
+        
+        document.getElementById('report-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             const category = document.getElementById('report-category').value;
-            const typeLabel = isReportingLost ? 'Lost Report' : 'Found Report';
-            document.getElementById('generated-item-name').textContent = `${category} - ${typeLabel}`;
-        }
-
-        function handleFilterChange() {
-            renderReports();
-        }
-
-        // --- Event Listeners and Initial Setup ---
-        window.onload = function() {
-            populateDropdowns();
+            const grade = document.getElementById('report-grade').value;
+            const section = document.getElementById('report-section').value;
+            const description = document.getElementById('report-description').value;
+            const location = document.getElementById('report-location').value;
+            const base64Image = tempBase64Image;
             
-            // Attach submit handler
-            document.getElementById('report-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const category = document.getElementById('report-category').value;
-                const grade = document.getElementById('report-grade').value;
-                const section = document.getElementById('report-section').value;
-                const description = document.getElementById('report-description').value;
-                const location = document.getElementById('report-location').value;
-                
-                // Get the Base64 image data
-                const base64Image = tempBase64Image;
-                
-                // Call the new ASYNC function
-                addReport(isReportingLost, category, grade, section, description, location, SIMULATED_USER_ID, base64Image);
-                
-                tempBase64Image = null;
-                closeReportModal();
-                // We no longer call renderReports() here, addReport() handles reloading.
-            });
+            addReport(isReportingLost, category, grade, section, description, location, SIMULATED_USER_ID, base64Image);
+            
+            tempBase64Image = null;
+            closeReportModal();
+        });
 
-            // 3. Initial Load from Google Sheets
-            loadReports();
-        };
+        // Initial Load from Google Sheets
+        loadReports();
+    };
 
-    </script>
+</script>
 </body>
 </html>
