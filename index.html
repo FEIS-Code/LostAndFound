@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Five Elements International School Lost & Found</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Lucide icons for aesthetics -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -21,13 +20,25 @@
             background-color: #9ca3af;
             border-radius: 10px;
         }
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #4f46e5;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="min-h-screen">
 
     <header class="bg-white shadow-md p-4 sticky top-0 z-10">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center">
-            <!-- Updated H1 to color every word and the ampersand -->
             <h1 class="text-3xl font-extrabold tracking-tight mb-2 sm:mb-0">
                 <span class="text-red-800">Five</span>
                 <span class="text-yellow-500">Elements</span>
@@ -55,8 +66,7 @@
     </header>
 
     <main class="max-w-7xl mx-auto p-4 sm:p-6">
-       
-        <!-- Filter and Search Bar -->
+        
         <div class="space-y-4 mb-6 p-4 bg-white rounded-xl shadow-lg">
             <div class="relative flex-grow">
                 <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
@@ -71,7 +81,6 @@
 
             <div class="flex flex-wrap gap-3 items-center">
                 <label class="text-sm font-medium text-gray-700">Filter:</label>
-                <!-- Type Filter -->
                 <select id="filter-type" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="all">All Types</option>
@@ -79,27 +88,26 @@
                     <option value="found">Found</option>
                 </select>
 
-                <!-- Category Filter -->
                 <select id="filter-category" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="All Categories">All Categories</option>
-                    <!-- Options populated by JS -->
-                </select>
-               
-                <!-- Grade Filter (New filters from Python context) -->
+                    </select>
+                
                 <select id="filter-grade" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="All Grades">All Grades</option>
-                    <!-- Options populated by JS -->
-                </select>
-               
+                    </select>
+                
             </div>
         </div>
-       
-        <!-- Report List Container -->
-        <div id="report-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
-            <!-- Report Cards will be injected here by JavaScript -->
+        
+        <div id="loading-state" class="hidden p-8 text-center bg-white rounded-xl shadow-lg mt-8">
+            <div class="spinner mx-auto"></div>
+            <p class="text-xl text-gray-500 font-medium mt-4">Loading Reports...</p>
         </div>
+
+        <div id="report-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
+            </div>
 
         <div id="no-reports-message" class="hidden p-8 text-center bg-white rounded-xl shadow-lg mt-8">
             <p class="text-xl text-gray-500 font-medium">No reports found matching your criteria.</p>
@@ -107,24 +115,21 @@
 
     </main>
 
-    <!-- Report Modal (Hidden by default) -->
     <div id="report-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
-        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg m-4">
+        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg m-4 overflow-y-auto max-h-[90vh]">
             <div id="modal-header" class="flex justify-between items-center mb-4 border-b pb-2">
                 <h2 id="modal-title" class="text-2xl font-bold"></h2>
                 <button onclick="closeReportModal()" class="text-gray-400 hover:text-gray-600 transition">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
-           
+            
             <form id="report-form" class="space-y-4">
-               
-                <!-- Auto-Generated Title Display -->
+                
                 <div id="auto-title-display" class="p-3 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-indigo-700 font-medium">
                     Report Title: <span id="generated-item-name" class="font-semibold"></span> (Auto-generated from Category)
                 </div>
 
-                <!-- Media Upload Field (UPDATED TO USE REAL FILE INPUT AND PREVIEW) -->
                 <div class="border border-dashed border-gray-400 rounded-xl p-4 text-center space-y-3">
                     <label for="report-image-input" class="block text-sm font-medium text-gray-700 cursor-pointer">
                         <span class="inline-flex items-center text-indigo-600">
@@ -149,7 +154,6 @@
                 </div>
 
 
-                <!-- Category Fields -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label for="report-category" class="block text-sm font-medium text-gray-700">Item Category</label>
@@ -159,8 +163,7 @@
                             required
                             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
                         >
-                            <!-- Options populated by JS -->
-                        </select>
+                            </select>
                     </div>
                     <div>
                         <label for="report-grade" class="block text-sm font-medium text-gray-700">Grade Level</label>
@@ -169,8 +172,7 @@
                             required
                             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
                         >
-                            <!-- Options populated by JS -->
-                        </select>
+                            </select>
                     </div>
                     <div>
                         <label for="report-section" class="block text-sm font-medium text-gray-700">Section/Class</label>
@@ -179,12 +181,10 @@
                             required
                             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
                         >
-                            <!-- Options populated by JS -->
-                        </select>
+                            </select>
                     </div>
                 </div>
-               
-                <!-- Unique Description -->
+                
                 <div>
                     <label for="report-description" class="block text-sm font-medium text-gray-700">Unique Description</label>
                     <textarea
@@ -195,8 +195,7 @@
                         class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
                     ></textarea>
                 </div>
-               
-                <!-- Location -->
+                
                 <div>
                     <label for="report-location" class="block text-sm font-medium text-gray-700">Location (Lost or Found)</label>
                     <input
@@ -207,7 +206,7 @@
                         class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"
                     />
                 </div>
-               
+                
                 <button
                     type="submit"
                     id="submit-button"
@@ -221,7 +220,14 @@
     </div>
 
     <script>
-        // --- Data Structures & Configuration (Python equivalent) ---
+        // --- Configuration ---
+        
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // !!! PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT URL HERE
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxAzLeHnAg7-ZWenxj0xNc3XtFa4UVyhDaYf-YiIibWd8Id-3Ej7u0V36xTgkZgTMNX/exec";
+
+
         const ITEM_CATEGORIES = [
             'Backpack', 'Lunchbox', 'Textbook', 'Clothing', 'Electronics',
             'Water Bottle', 'Keys', 'Documents/IDs', 'Sports Gear', 'Other'
@@ -237,17 +243,17 @@
             'A', 'B', 'C', 'D', 'E', 'F', 'General/None'
         ];
 
-        // This simulates the REPORTS_DATABASE array from the Python script
+        // This will be populated from the Google Sheet
         let REPORTS_DATABASE = [];
         let isReportingLost = true; // State for the modal
-        let nextReportId = 1;
-        const SIMULATED_USER_ID = "html-sim-user-12345";
-       
+        let nextReportId = 1; // Used for unique IDs, will be managed by Google Sheet
+        const SIMULATED_USER_ID = "school-web-user";
+        
         // TEMPORARY storage for the Base64 string during the form submission process
         let tempBase64Image = null;
 
 
-        // --- Core Functions (Python equivalent implementation in JS) ---
+        // --- Core Functions ---
 
         /**
          * Converts the selected file into a Base64 string for display/storage.
@@ -257,11 +263,18 @@
             const previewContainer = document.getElementById('image-preview-container');
             const previewImage = document.getElementById('image-preview');
             const filenameText = document.getElementById('image-filename');
-           
+            
             tempBase64Image = null; // Reset temp state
             previewContainer.classList.add('hidden'); // Hide until image loads
 
             if (file) {
+                // Check file size (e.g., limit to 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert("Image is too large! Please select an image smaller than 2MB.");
+                    event.target.value = ''; // Clear the input
+                    return;
+                }
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     tempBase64Image = e.target.result; // Store Base64 string
@@ -280,10 +293,10 @@
         function populateDropdowns() {
             const categorySelect = document.getElementById('filter-category');
             const reportCategorySelect = document.getElementById('report-category');
-           
+            
             const gradeSelect = document.getElementById('filter-grade');
             const reportGradeSelect = document.getElementById('report-grade');
-           
+            
             const reportSectionSelect = document.getElementById('report-section');
 
             // Populate Category dropdowns
@@ -293,7 +306,7 @@
                 categorySelect.add(optionFilter);
                 reportCategorySelect.add(optionReport);
             });
-           
+            
             // Populate Grade dropdowns
             GRADE_LEVELS.forEach(grade => {
                 const optionFilter = new Option(grade, grade);
@@ -307,75 +320,76 @@
                 reportSectionSelect.add(new Option(section, section));
             });
         }
-       
+        
         /**
-         * Simulates adding a report to the database (REPORTS_DATABASE array).
-         * Now accepts a base64Image string instead of a boolean flag.
+         * [NEW] Fetches all reports from the Google Sheet API.
          */
-        function addReport(isLost, category, grade, section, description, location, userId, base64Image = null) {
-            const reportType = isLost ? 'lost' : 'found';
-           
-            // Auto-generate item name
-            const itemName = `${category} - ${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report`;
+        async function loadReports() {
+            const loading = document.getElementById('loading-state');
+            const noReportsMessage = document.getElementById('no-reports-message');
+            
+            loading.classList.remove('hidden');
+            noReportsMessage.classList.add('hidden');
+            REPORTS_DATABASE = []; // Clear old data
 
-            const newReport = {
-                id: nextReportId++,
-                type: reportType,
-                item: itemName,
-                category: category,
-                grade: grade,
-                section: section,
-                description: description.trim(),
-                location: location.trim(),
-                // Use a standard date format for consistency
-                date: new Date().toLocaleDateString(),
-                user_id: userId,
-                // New field for image data
-                base64_image: base64Image,
-            };
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Sort to show newest first (assuming 'id' is a number)
+                REPORTS_DATABASE = data.sort((a, b) => b.id - a.id);
+                console.log("Reports loaded from Google Sheet:", REPORTS_DATABASE);
 
-            REPORTS_DATABASE.push(newReport);
-            // Sort to show the latest report first (simple sort on ID for simulation)
-            REPORTS_DATABASE.sort((a, b) => b.id - a.id);
-            console.log(`[SUCCESS] New ${reportType} report added: ${itemName}`);
-            return newReport;
+            } catch (error) {
+                console.error("Failed to load reports:", error);
+                alert("Error: Could not load reports from the database. Please check the console.");
+            } finally {
+                loading.classList.add('hidden');
+            }
         }
-       
+        
         /**
-         * Filters the list of reports based on criteria. (Python filter_reports equivalent)
+         * Filters the list of reports based on criteria.
          */
         function filterReports(reports) {
             const filterType = document.getElementById('filter-type').value;
             const filterCategory = document.getElementById('filter-category').value;
             const filterGrade = document.getElementById('filter-grade').value;
             const searchTerm = document.getElementById('search-term').value.toLowerCase();
-           
+            
             return reports.filter(report => {
-                // 1. Type Filter
                 const typeMatch = filterType === 'all' || report.type === filterType;
-
-                // 2. Category Filter
                 const categoryMatch = filterCategory === 'All Categories' || report.category === filterCategory;
-               
-                // 3. Grade Filter
                 const gradeMatch = filterGrade === 'All Grades' || report.grade === filterGrade;
 
-                // 4. Search Term Filter (checks item name, description, and location)
+                // Handle potential null/undefined values from sheet
+                const item = report.item || '';
+                const description = report.description || '';
+                const location = report.location || '';
+
                 const searchMatch = searchTerm === '' ||
-                    report.item.toLowerCase().includes(searchTerm) ||
-                    report.description.toLowerCase().includes(searchTerm) ||
-                    report.location.toLowerCase().includes(searchTerm);
+                    item.toLowerCase().includes(searchTerm) ||
+                    description.toLowerCase().includes(searchTerm) ||
+                    location.toLowerCase().includes(searchTerm);
 
                 return typeMatch && categoryMatch && gradeMatch && searchMatch;
             });
         }
 
         /**
-         * Renders the filtered reports to the DOM. (Python display_reports equivalent)
+         * Renders the filtered reports to the DOM.
          */
         function renderReports() {
             const container = document.getElementById('report-list');
             const noReportsMessage = document.getElementById('no-reports-message');
+            const loading = document.getElementById('loading-state');
+
+            // Ensure loading is hidden
+            loading.classList.add('hidden');
+
             const filteredReports = filterReports(REPORTS_DATABASE);
 
             container.innerHTML = '';
@@ -386,24 +400,23 @@
             }
 
             noReportsMessage.classList.add('hidden');
-           
+            
             filteredReports.forEach(report => {
                 const isLost = report.type === 'lost';
-               
-                // Dark Maroon (Lost) uses red-800
-                // Bright Yellow (Found) uses yellow-500
+                
                 const typeColor = isLost
-                    ? 'bg-red-100 text-red-800 border-red-800' // Light background, dark text/border (Maroon)
-                    : 'bg-yellow-500 text-gray-900 border-yellow-600'; // Bright background, dark text/border (Yellow)
-               
+                    ? 'bg-red-100 text-red-800 border-red-800' // Maroon
+                    : 'bg-yellow-500 text-gray-900 border-yellow-600'; // Yellow
+                
                 const cardBorder = isLost
-                    ? 'border-l-4 border-red-800' // Dark Maroon border
-                    : 'border-l-4 border-yellow-500'; // Bright Yellow border
-               
+                    ? 'border-l-4 border-red-800' // Maroon border
+                    : 'border-l-4 border-yellow-500'; // Yellow border
+                
                 const typeIcon = isLost ? 'x' : 'search';
+                // Check if base64_image string is present and not empty
                 const hasImage = !!report.base64_image;
                 const mediaIcon = hasImage ? 'camera' : 'file-text';
-               
+                
                 const cardHtml = `
                     <div class="p-4 bg-white rounded-xl shadow-lg transition duration-300 hover:shadow-xl ${cardBorder}">
                         <div class="flex justify-between items-start mb-2">
@@ -466,42 +479,39 @@
         }
 
         // --- UI Logic ---
-       
+        
         function openReportModal(isLost) {
             isReportingLost = isLost;
             const modal = document.getElementById('report-modal');
             const titleElement = document.getElementById('modal-title');
             const submitButton = document.getElementById('submit-button');
-           
+            
             // Reset image fields when opening
             tempBase64Image = null;
             document.getElementById('report-image-input').value = '';
             document.getElementById('image-preview-container').classList.add('hidden');
 
-            // Set Modal appearance
             const headerText = isLost ? 'Report a Lost Item' : 'Report an Item Found';
             titleElement.textContent = headerText;
-            // Maroon (Lost): text-red-800, Yellow (Found): text-yellow-500
             titleElement.className = `text-2xl font-bold ${isLost ? 'text-red-800' : 'text-yellow-500'}`;
-           
-            submitButton.textContent = `Submit ${isLost ? 'Lost' : 'Found'} Report`;
-            // Set background, hover, and text color for submission button
+            
+            // Reset submit button text and state
+            submitButton.disabled = false;
+            submitButton.innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 mr-2"></i> Submit ${isLost ? 'Lost' : 'Found'} Report`;
+
             submitButton.className = `w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-medium transition duration-200 ${isLost
                 ? 'bg-red-800 hover:bg-red-700 text-white'
                 : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900'}`;
 
-
-            // Reset form and update title placeholder
             document.getElementById('report-form').reset();
             updateGeneratedTitle();
-           
+            
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             lucide.createIcons(); // Re-render icons inside modal
         }
 
         function closeReportModal() {
-            // Reset temp state on close
             tempBase64Image = null;
             document.getElementById('report-modal').classList.add('hidden');
             document.getElementById('report-modal').classList.remove('flex');
@@ -519,52 +529,80 @@
 
 
         // --- Event Listeners and Initial Setup ---
-        window.onload = function() {
+        
+        // [MODIFIED] window.onload to be async
+        window.onload = async function() {
+            // Render icons on initial page load
+            lucide.createIcons();
+            
+            // Populate dropdowns first
             populateDropdowns();
-           
-            // 1. Initial Data Seeding (Using a placeholder image for demonstration)
-            addReport(
-                true, 'Backpack', '7th Grade', 'B',
-                'Navy blue backpack with a prominent yellow NASA patch. (Image attached for reference).',
-                'Locker bay near the gymnasium', SIMULATED_USER_ID,
-                // Placeholder image for the seed data
-                'https://placehold.co/100x100/374151/ffffff?text=NASA+Bag'
-            );
-            addReport(
-                false, 'Electronics', 'Staff', 'General/None',
-                'A small black tablet, brand is unidentifiable, found resting on a charging station.',
-                'Staff Lounge', "admin-001", null
-            );
-            addReport(
-                true, 'Keys', '5th Grade', 'A',
-                'Three silver keys on a green lanyard with a soccer ball charm.',
-                'Playground asphalt', "student-5a", null
-            );
-           
-            // 2. Attach submit handler
-            document.getElementById('report-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-               
-                const category = document.getElementById('report-category').value;
-                const grade = document.getElementById('report-grade').value;
-                const section = document.getElementById('report-section').value;
-                const description = document.getElementById('report-description').value;
-                const location = document.getElementById('report-location').value;
-               
-                // Get the Base64 image data from the temporary state variable
-                const base64Image = tempBase64Image;
-               
-                addReport(isReportingLost, category, grade, section, description, location, SIMULATED_USER_ID, base64Image);
-               
-                tempBase64Image = null; // Reset state after submission
-                closeReportModal();
-                renderReports();
-
-                console.log("Report submitted successfully with image status (if selected).");
-            });
-
-            // 3. Initial Render
+            
+            // Then, load data from the network and render it
+            await loadReports();
             renderReports();
+            
+            // [MODIFIED] Attach async submit handler
+            document.getElementById('report-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitButton = document.getElementById('submit-button');
+                submitButton.disabled = true;
+                submitButton.innerHTML = `<div class="spinner-small" style="width: 20px; height: 20px; border-left-color: white; border-width: 2px;"></div> <span class="ml-2">Submitting...</span>`;
+                
+                // 1. Gather all data
+                const reportType = isReportingLost ? 'lost' : 'found';
+                const category = document.getElementById('report-category').value;
+                
+                const newReport = {
+                    id: new Date().getTime(), // Create a unique ID based on timestamp
+                    type: reportType,
+                    item: `${category} - ${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report`,
+                    category: category,
+                    grade: document.getElementById('report-grade').value,
+                    section: document.getElementById('report-section').value,
+                    description: document.getElementById('report-description').value.trim(),
+                    location: document.getElementById('report-location').value.trim(),
+                    date: new Date().toLocaleDateString(),
+                    user_id: SIMULATED_USER_ID,
+                    base64_image: tempBase64Image // Get the Base64 image
+                };
+
+                try {
+                    // 2. Send data to Google Sheet
+                    const response = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'cors', // Required for cross-domain requests
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(newReport),
+                    });
+
+                    const result = await response.json();
+                    if (result.status !== 'success') {
+                        throw new Error(result.message || "Failed to post data.");
+                    }
+                    
+                    console.log("Report submitted successfully:", result.data);
+
+                    // 3. Reset state and refresh list
+                    tempBase64Image = null;
+                    closeReportModal();
+                    
+                    // 4. Reload all reports from the server to show the new one
+                    await loadReports();
+                    renderReports();
+
+                } catch (error) {
+                    console.error("Failed to submit report:", error);
+                    alert("Error: Could not submit report. Please try again.");
+                    // Re-enable button on failure
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = `<i data-lucide="plus-circle" class="w-5 h-5 mr-2"></i> Submit Report`;
+                    lucide.createIcons();
+                }
+            });
         };
 
     </script>
