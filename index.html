@@ -66,9 +66,11 @@
                 
                 <select id="filter-type" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                    <option value="all">Active Reports (Not Claimed)</option> <option value="lost">Lost</option>
+                    <option value="all">Active Reports (Not Claimed)</option> 
+                    <option value="lost">Lost</option>
                     <option value="found">Found</option>
-                    <option value="claimed">Claimed</option> </select>
+                    <option value="claimed">Claimed</option> 
+                </select>
 
                 <select id="filter-category" onchange="handleFilterChange()"
                     class="py-2 px-3 border border-gray-300 rounded-xl shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500">
@@ -89,7 +91,8 @@
             <p class="text-xl text-gray-500 font-medium">No reports found matching your criteria.</p>
         </div>
     </main>
-<footer class="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-center text-gray-500">
+
+    <footer class="max-w-7xl mx-auto px-4 sm:px-6 py-8 text-center text-gray-500">
         <p class="font-semibold mb-2 text-lg">
             An App by <span class="text-indigo-600 font-bold">Team Seekers</span>
         </p>
@@ -100,10 +103,12 @@
             Soham Varma (Grade 7) • Skanda (Grade 7)
         </p>
     </footer>
+
     <div id="report-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm p-4 overflow-y-auto">
         
         <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg m-4 max-h-[90vh] flex flex-col">
-            <div id="modal-header" class="flex justify-between items-center mb-4 border-b pb-2 flex-shrink-0"> <h2 id="modal-title" class="text-2xl font-bold"></h2>
+            <div id="modal-header" class="flex justify-between items-center mb-4 border-b pb-2 flex-shrink-0"> 
+                <h2 id="modal-title" class="text-2xl font-bold"></h2>
                 <button onclick="closeReportModal()" class="text-gray-400 hover:text-gray-600 transition">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
@@ -171,10 +176,53 @@
             </form>
         </div>
     </div>
-<script>
+
+    <div id="claim-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-md m-4 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4 border-b pb-2 flex-shrink-0">
+                <h2 class="text-2xl font-bold text-indigo-600">Claim This Item</h2>
+                <button onclick="closeClaimModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="claim-form" class="space-y-4">
+                <input type="hidden" id="claim-report-id">
+                
+                <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 font-medium">
+                    You are attempting to claim Report ID: <span id="claim-report-id-display" class="font-semibold text-base"></span>
+                </div>
+
+                <div>
+                    <label for="claimant-name" class="block text-sm font-medium text-gray-700">Your Full Name</label>
+                    <input id="claimant-name" type="text" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"/>
+                </div>
+
+                <div>
+                    <label for="claimant-contact" class="block text-sm font-medium text-gray-700">Student ID or Contact No.</label>
+                    <input id="claimant-contact" type="text" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"/>
+                </div>
+
+                <div>
+                    <label for="claim-justification" class="block text-sm font-medium text-gray-700">Reason/Justification for Claim</label>
+                    <textarea id="claim-justification" placeholder="Describe a unique feature or marking that proves it's yours." rows="3" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border"></textarea>
+                </div>
+                
+                <button
+                    type="submit"
+                    class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition duration-200"
+                >
+                    <i data-lucide="shield-check" class="w-5 h-5 mr-2"></i>
+                    Submit Claim for Verification
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
     // --- Configuration ---
-    // Make sure this URL is correct!
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzUPu-oEgsB74FXbNNYnoPhNOQFcvGhg7LaHavF7U-abpobgdW1q40qMIkLLvPLr6jdA/exec';
+    // !!! IMPORTANT: REPLACE THIS PLACEHOLDER WITH YOUR ACTUAL DEPLOYED GOOGLE SCRIPT URL !!!
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzd_mq7dUi42976zkVgty90-de4sAz6tq5bAEzMaYdQG_x4bWrJ9R2kqHan-N6w6qS2nA/exec';
 
     const ITEM_CATEGORIES = [
         'Backpack', 'Lunchbox', 'Textbook', 'Clothing', 'Electronics',
@@ -193,30 +241,23 @@
     let isReportingLost = true;
     const SIMULATED_USER_ID = "school-web-user-" + Math.floor(Math.random() * 100000);
     let tempBase64Image = null;
-    
-    // NEW: ADMIN MODE Flag. In a real app, this would be based on user login.
-    const IS_ADMIN_MODE = true; 
 
     // --- Core Functions (Connected to Google Sheets) ---
 
     async function loadReports() {
         console.log("Loading reports from Google Sheet...");
-        document.getElementById('report-list').innerHTML = 
-            `<p class="text-indigo-600 text-center col-span-full font-semibold">Loading reports...</p>`;
-            
         try {
             const response = await fetch(GOOGLE_SCRIPT_URL);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             
             const data = await response.json();
-            // Ensure 'type' is lowercased for consistent filtering
-            REPORTS_DATABASE = data.map(r => ({...r, type: String(r.type).toLowerCase()})).reverse();
+            REPORTS_DATABASE = data.reverse();
             renderReports();
             console.log(`Successfully loaded ${REPORTS_DATABASE.length} reports.`);
         } catch (error) {
             console.error("Failed to load reports:", error);
             document.getElementById('report-list').innerHTML = 
-                `<p class="text-red-500 text-center col-span-full">Error loading reports. Please check the Google Script URL and Deployment.</p>`;
+                `<p class="text-red-500 text-center col-span-full">Error loading reports. Please check the connection.</p>`;
         }
     }
 
@@ -239,10 +280,9 @@
         console.log("Submitting new report...");
         
         try {
-            // Note: The 'mode: no-cors' prevents reading the response directly in a non-admin deployment, 
-            // but the request is sent to the doPost function. The reload handles the result.
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
+                // Using 'no-cors' here is okay since we don't rely on the response for the report creation flow
                 mode: 'no-cors', 
                 cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
@@ -250,7 +290,6 @@
             });
             
             console.log("Report submitted. Reloading list.");
-            alert(`Report submitted successfully! Item: ${itemName}`);
             
             document.getElementById('report-list').innerHTML = 
                 `<p class="text-indigo-600 text-center col-span-full font-semibold">Submitting report... reloading list...</p>`;
@@ -264,61 +303,56 @@
         }
     }
     
-    // NEW: Function to handle the Claim request
-    async function markAsClaimed(id) {
-        if (!IS_ADMIN_MODE) {
-            alert("You must be an administrator to mark items as claimed.");
-            return;
-        }
-
-        if (!confirm(`Are you sure you want to mark Report ID: ${id} as CLAIMED? This action is permanent.`)) {
-            return;
-        }
-
-        const claimData = {
-            action: 'claim', // Identifier for the Apps Script side
-            id: id,
-        };
-
-        console.log(`Submitting claim for ID: ${id}...`);
+    // NEW: Function to submit the claim data
+    async function submitClaim(e) {
+        e.preventDefault();
         
+        const reportId = document.getElementById('claim-report-id').value;
+        const claimantName = document.getElementById('claimant-name').value;
+        const claimantContact = document.getElementById('claimant-contact').value;
+        const claimJustification = document.getElementById('claim-justification').value;
+        
+        const claimData = {
+            action: 'submit_claim', // Signal to Apps Script
+            report_id: reportId,
+            claimant_name: claimantName,
+            claimant_contact: claimantContact,
+            claim_justification: claimJustification.trim()
+        };
+        
+        console.log(`Submitting claim for Report ID: ${reportId}`);
+        
+        // Show loading state
+        const submitButton = document.querySelector('#claim-form button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = `<i data-lucide="loader" class="w-5 h-5 mr-2 animate-spin"></i> Submitting...`;
+
         try {
-             // For this action, we expect a response, so we remove 'mode: no-cors'
-             // NOTE: This will only work if the script is deployed to allow access from your origin.
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(claimData)
             });
             
-            const result = await response.json();
+            // This line will throw if the server response is not valid JSON
+            const result = await response.json(); 
 
-            if (result.status === "success" && result.action === "claimed") {
-                console.log(`Successfully claimed ID: ${id}`);
-                alert(`Report ID ${id} successfully marked as claimed.`);
-                loadReports(); // Reload the data
+            if (result.status === "success") {
+                alert(`Claim submitted successfully! We have logged your request (ID: ${result.claim_id}). An administrator will contact you shortly.`);
             } else {
-                console.error("Claim failed:", result.message);
-                alert(`Claim failed: ${result.message}. Please check Google Script logs.`);
-                loadReports();
+                throw new Error(result.message || "Unknown error during claim submission.");
             }
 
         } catch (error) {
-            console.error("Failed to submit claim request:", error);
-            alert("There was an error submitting the claim request. Please check your network and script deployment.");
-            loadReports();
+            console.error("Failed to submit claim:", error);
+            alert(`Error submitting claim: ${error.message}. Please try again.`);
+        } finally {
+            submitButton.disabled = false;
+            submitButton.innerHTML = `<i data-lucide="shield-check" class="w-5 h-5 mr-2"></i> Submit Claim for Verification`;
+            closeClaimModal();
         }
     }
-    
-    function showClaimInstructions(id) {
-        alert(
-            "How to Claim This Item:\n\n" +
-            "Please contact our admin team at +91 96665 67445.\n\n" +
-            "To help them find it, please provide this unique Report ID:\n\n" +
-            id
-        );
-    }
+
 
     function handleImageUpload(event) {
         const file = event.target.files[0];
@@ -330,7 +364,7 @@
         previewContainer.classList.add('hidden');
 
         if (file) {
-            if (file.size > 350 * 1024) { 
+            if (file.size > 350 * 1024) { 
                 alert("Image is too large! Please upload an image smaller than 350KB.");
                 event.target.value = '';
                 return;
@@ -375,18 +409,21 @@
         
         return reports.filter(report => {
             let typeMatch = false;
+            // Ensure report.type is treated as a string for comparison
+            const reportType = String(report.type).toLowerCase(); 
+
             if (filterType === 'all') {
-                typeMatch = report.type !== 'claimed';
+                typeMatch = reportType !== 'claimed';
             } else {
-                typeMatch = report.type === filterType;
+                typeMatch = reportType === filterType;
             }
             
             const categoryMatch = filterCategory === 'All Categories' || report.category === filterCategory;
             const gradeMatch = filterGrade === 'All Grades' || report.grade === filterGrade;
             const searchMatch = searchTerm === '' ||
-                (report.item && report.item.toLowerCase().includes(searchTerm)) ||
-                (report.description && report.description.toLowerCase().includes(searchTerm)) ||
-                (report.location && report.location.toLowerCase().includes(searchTerm));
+                (report.item && String(report.item).toLowerCase().includes(searchTerm)) ||
+                (report.description && String(report.description).toLowerCase().includes(searchTerm)) ||
+                (report.location && String(report.location).toLowerCase().includes(searchTerm));
             
             return typeMatch && categoryMatch && gradeMatch && searchMatch;
         });
@@ -405,8 +442,8 @@
         noReportsMessage.classList.add('hidden');
         
         filteredReports.forEach(report => {
-            const isClaimed = report.type === 'claimed';
-            const isLost = report.type === 'lost';
+            const reportType = String(report.type).toLowerCase();
+            const isClaimed = reportType === 'claimed';
             
             let typeColor, cardBorder, typeIcon;
 
@@ -414,7 +451,7 @@
                 typeColor = 'bg-gray-100 text-gray-600 border-gray-400';
                 cardBorder = 'border-l-4 border-gray-400';
                 typeIcon = 'check-circle';
-            } else if (isLost) {
+            } else if (reportType === 'lost') {
                 typeColor = 'bg-red-100 text-red-800 border-red-800';
                 cardBorder = 'border-l-4 border-red-800';
                 typeIcon = 'x';
@@ -428,32 +465,20 @@
             const mediaIcon = hasImage ? 'camera' : 'file-text';
             
             let claimButtonHtml = '';
-            
             if (isClaimed) {
                 claimButtonHtml = `
                     <div class="mt-4 p-2 text-center bg-gray-100 rounded-lg text-gray-700 font-medium text-sm flex items-center justify-center">
-                         <i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> This item has been **CLAIMED**.
+                         <i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> This item has been claimed.
                     </div>`;
             } else {
-                // Public instruction button (for all users)
-                claimButtonHtml += `
-                    <button 
-                        onclick="showClaimInstructions('${report.id}')"
+                // Button now opens the claim modal
+                claimButtonHtml = `
+                    <button 
+                        onclick="openClaimModal('${report.id}')"
                         class="w-full mt-4 py-2 px-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-200 text-sm flex items-center justify-center">
-                        <i data-lucide="info" class="w-4 h-4 mr-2"></i>
-                        How to Claim This Item
+                        <i data-lucide="shield-check" class="w-4 h-4 mr-2"></i>
+                        Initiate Claim (Contact Admin)
                     </button>`;
-                    
-                // **NEW ADMIN BUTTON** (Only visible if IS_ADMIN_MODE is true)
-                if (IS_ADMIN_MODE) {
-                    claimButtonHtml += `
-                        <button 
-                            onclick="markAsClaimed('${report.id}')"
-                            class="w-full mt-2 py-2 px-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-200 text-xs flex items-center justify-center">
-                            <i data-lucide="shield-check" class="w-4 h-4 mr-2"></i>
-                            Admin: Mark as Claimed
-                        </button>`;
-                }
             }
             
             const cardHtml = `
@@ -505,7 +530,25 @@
         lucide.createIcons();
     }
     
-    // --- Modal & UI Functions (No changes needed, keeping for completeness) ---
+    // --- NEW Claim Modal Functions ---
+    
+    function openClaimModal(reportId) {
+        document.getElementById('claim-report-id').value = reportId;
+        document.getElementById('claim-report-id-display').textContent = reportId;
+        document.getElementById('claim-form').reset(); // Clear previous data
+
+        const modal = document.getElementById('claim-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        lucide.createIcons();
+    }
+
+    function closeClaimModal() {
+        document.getElementById('claim-modal').classList.add('hidden');
+        document.getElementById('claim-modal').classList.remove('flex');
+    }
+    
+    // --- Other Modal & UI Functions (Remaining functions kept the same) ---
 
     function openReportModal(isLost) {
         isReportingLost = isLost;
@@ -555,6 +598,7 @@
     window.onload = function() {
         populateDropdowns();
         
+        // Listener for NEW Report Submission
         document.getElementById('report-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -570,11 +614,15 @@
             tempBase64Image = null;
             closeReportModal();
         });
+        
+        // NEW Listener for Claim Submission
+        document.getElementById('claim-form').addEventListener('submit', submitClaim);
+
 
         // Initial Load from Google Sheets
         loadReports();
     };
 
-</script>
+    </script>
 </body>
 </html>
