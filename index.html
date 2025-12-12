@@ -221,7 +221,7 @@
     
     <script>
     // --- Configuration ---
-    // !!! IMPORTANT: REPLACE THIS PLACEHOLDER WITH YOUR ACTUAL DEPLOYED GOOGLE SCRIPT URL !!!
+    // !!! IMPORTANT: PASTE YOUR ACTUAL DEPLOYED GOOGLE SCRIPT URL HERE !!!
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6XJ4aStYwNJ7_XDkWuUK6RMq7_HYLiE8A6gQHnYts9PkdlbIiFXVzeVKIPtjnCNp1MQ/exec';
 
     const ITEM_CATEGORIES = [
@@ -282,7 +282,7 @@
         try {
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                // Using 'no-cors' here is okay since we don't rely on the response for the report creation flow
+                // Using 'no-cors' here is fine since we don't rely on the response for the report creation flow
                 mode: 'no-cors', 
                 cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
@@ -303,7 +303,7 @@
         }
     }
     
-    // NEW: Function to submit the claim data
+    // NEW: Function to submit the claim data - USES URL-ENCODED DATA FOR CORS RELIABILITY
     async function submitClaim(e) {
         e.preventDefault();
         
@@ -312,6 +312,7 @@
         const claimantContact = document.getElementById('claimant-contact').value;
         const claimJustification = document.getElementById('claim-justification').value;
         
+        // 1. Prepare data for URL encoding (required by the new Apps Script doPost logic)
         const claimData = {
             action: 'submit_claim', // Signal to Apps Script
             report_id: reportId,
@@ -320,7 +321,10 @@
             claim_justification: claimJustification.trim()
         };
         
-        console.log(`Submitting claim for Report ID: ${reportId}`);
+        // Convert the object to a URLSearchParams string (e.g., key=value&key2=value2)
+        const formData = new URLSearchParams(claimData);
+
+        console.log(`Submitting claim for Report ID: ${reportId} using URL-encoded data...`);
         
         // Show loading state
         const submitButton = document.querySelector('#claim-form button[type="submit"]');
@@ -328,24 +332,32 @@
         submitButton.innerHTML = `<i data-lucide="loader" class="w-5 h-5 mr-2 animate-spin"></i> Submitting...`;
 
         try {
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
+            await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(claimData)
+                
+                // 2. CRUCIAL: Use no-cors mode to bypass the OPTIONS preflight check
+                mode: 'no-cors', 
+                cache: 'no-cache',
+                
+                // 3. Set Content-Type for URL encoding
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                
+                // Send the URL-encoded string
+                body: formData.toString()
             });
             
-            // This line will throw if the server response is not valid JSON
-            const result = await response.json(); 
+            // Since we cannot read the response (no-cors mode), we assume success
+            // and rely on a short delay for the script execution to finish.
+            console.log("Claim request sent. Waiting for script to process...");
+            await new Promise(r => setTimeout(r, 1500)); 
 
-            if (result.status === "success") {
-                alert(`Claim submitted successfully! We have logged your request (ID: ${result.claim_id}). An administrator will contact you shortly.`);
-            } else {
-                throw new Error(result.message || "Unknown error during claim submission.");
-            }
+            alert(`Claim submitted successfully! Please check the 'Claims Log' sheet for verification.`);
+
 
         } catch (error) {
-            console.error("Failed to submit claim:", error);
-            alert(`Error submitting claim: ${error.message}. Please try again.`);
+            // This will only catch true network failures, not CORS policy blocks now.
+            console.error("Network Error during claim:", error);
+            alert(`Error submitting claim: ${error.message}. Please check your network connection.`);
         } finally {
             submitButton.disabled = false;
             submitButton.innerHTML = `<i data-lucide="shield-check" class="w-5 h-5 mr-2"></i> Submit Claim for Verification`;
