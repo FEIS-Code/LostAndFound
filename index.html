@@ -171,11 +171,10 @@
             </form>
         </div>
     </div>
-
 <script>
     // --- Configuration ---
     // Make sure this URL is correct!
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9DhwgyFOcXkB7-UVhSAxfLcH_wON-bdoJdfS-WjI1GBXp01hrRQr1e4UUDq8MeDdhNg/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzUPu-oEgsB74FXbNNYnoPhNOQFcvGhg7LaHavF7U-abpobgdW1q40qMIkLLvPLr6jdA/exec';
 
     const ITEM_CATEGORIES = [
         'Backpack', 'Lunchbox', 'Textbook', 'Clothing', 'Electronics',
@@ -194,23 +193,30 @@
     let isReportingLost = true;
     const SIMULATED_USER_ID = "school-web-user-" + Math.floor(Math.random() * 100000);
     let tempBase64Image = null;
+    
+    // NEW: ADMIN MODE Flag. In a real app, this would be based on user login.
+    const IS_ADMIN_MODE = true; 
 
     // --- Core Functions (Connected to Google Sheets) ---
 
     async function loadReports() {
         console.log("Loading reports from Google Sheet...");
+        document.getElementById('report-list').innerHTML = 
+            `<p class="text-indigo-600 text-center col-span-full font-semibold">Loading reports...</p>`;
+            
         try {
             const response = await fetch(GOOGLE_SCRIPT_URL);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             
             const data = await response.json();
-            REPORTS_DATABASE = data.reverse();
+            // Ensure 'type' is lowercased for consistent filtering
+            REPORTS_DATABASE = data.map(r => ({...r, type: String(r.type).toLowerCase()})).reverse();
             renderReports();
             console.log(`Successfully loaded ${REPORTS_DATABASE.length} reports.`);
         } catch (error) {
             console.error("Failed to load reports:", error);
-            document.getElementById('report-list').innerHTML = 
-                `<p class="text-red-500 text-center col-span-full">Error loading reports. Please check the connection.</p>`;
+            document.getElementById('report-list').innerHTML = 
+                `<p class="text-red-500 text-center col-span-full">Error loading reports. Please check the Google Script URL and Deployment.</p>`;
         }
     }
 
@@ -233,17 +239,20 @@
         console.log("Submitting new report...");
         
         try {
+            // Note: The 'mode: no-cors' prevents reading the response directly in a non-admin deployment, 
+            // but the request is sent to the doPost function. The reload handles the result.
             await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
+                mode: 'no-cors', 
                 cache: 'no-cache',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(reportData)
             });
             
             console.log("Report submitted. Reloading list.");
+            alert(`Report submitted successfully! Item: ${itemName}`);
             
-            document.getElementById('report-list').innerHTML = 
+            document.getElementById('report-list').innerHTML = 
                 `<p class="text-indigo-600 text-center col-span-full font-semibold">Submitting report... reloading list...</p>`;
             
             setTimeout(loadReports, 2000);
@@ -251,6 +260,53 @@
         } catch (error) {
             console.error("Failed to submit report:", error);
             alert("There was an error submitting your report. Please try again.");
+            loadReports();
+        }
+    }
+    
+    // NEW: Function to handle the Claim request
+    async function markAsClaimed(id) {
+        if (!IS_ADMIN_MODE) {
+            alert("You must be an administrator to mark items as claimed.");
+            return;
+        }
+
+        if (!confirm(`Are you sure you want to mark Report ID: ${id} as CLAIMED? This action is permanent.`)) {
+            return;
+        }
+
+        const claimData = {
+            action: 'claim', // Identifier for the Apps Script side
+            id: id,
+        };
+
+        console.log(`Submitting claim for ID: ${id}...`);
+        
+        try {
+             // For this action, we expect a response, so we remove 'mode: no-cors'
+             // NOTE: This will only work if the script is deployed to allow access from your origin.
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(claimData)
+            });
+            
+            const result = await response.json();
+
+            if (result.status === "success" && result.action === "claimed") {
+                console.log(`Successfully claimed ID: ${id}`);
+                alert(`Report ID ${id} successfully marked as claimed.`);
+                loadReports(); // Reload the data
+            } else {
+                console.error("Claim failed:", result.message);
+                alert(`Claim failed: ${result.message}. Please check Google Script logs.`);
+                loadReports();
+            }
+
+        } catch (error) {
+            console.error("Failed to submit claim request:", error);
+            alert("There was an error submitting the claim request. Please check your network and script deployment.");
             loadReports();
         }
     }
@@ -297,9 +353,6 @@
         const gradeSelect = document.getElementById('filter-grade');
         const reportGradeSelect = document.getElementById('report-grade');
         const reportSectionSelect = document.getElementById('report-section');
-        
-        // Add "Claimed" to the filter
-
         
         ITEM_CATEGORIES.forEach(cat => {
             categorySelect.add(new Option(cat, cat));
@@ -353,6 +406,7 @@
         
         filteredReports.forEach(report => {
             const isClaimed = report.type === 'claimed';
+            const isLost = report.type === 'lost';
             
             let typeColor, cardBorder, typeIcon;
 
@@ -360,12 +414,12 @@
                 typeColor = 'bg-gray-100 text-gray-600 border-gray-400';
                 cardBorder = 'border-l-4 border-gray-400';
                 typeIcon = 'check-circle';
-            } else if (report.type === 'lost') {
+            } else if (isLost) {
                 typeColor = 'bg-red-100 text-red-800 border-red-800';
                 cardBorder = 'border-l-4 border-red-800';
                 typeIcon = 'x';
             } else { // 'found'
-                typeColor = 'bg-yellow-500 text-gray-900 border-yellow-600';
+                typeColor = 'bg-yellow-500 text-gray-900 border-yellow-500';
                 cardBorder = 'border-l-4 border-yellow-500';
                 typeIcon = 'search';
             }
@@ -374,19 +428,32 @@
             const mediaIcon = hasImage ? 'camera' : 'file-text';
             
             let claimButtonHtml = '';
+            
             if (isClaimed) {
                 claimButtonHtml = `
-                    <div class="mt-4 p-2 text-center bg-gray-100 rounded-lg text-gray-700 font-medium text-sm">
-                        This item has been claimed.
+                    <div class="mt-4 p-2 text-center bg-gray-100 rounded-lg text-gray-700 font-medium text-sm flex items-center justify-center">
+                         <i data-lucide="check-circle" class="w-4 h-4 mr-2"></i> This item has been **CLAIMED**.
                     </div>`;
             } else {
-                claimButtonHtml = `
+                // Public instruction button (for all users)
+                claimButtonHtml += `
                     <button 
                         onclick="showClaimInstructions('${report.id}')"
                         class="w-full mt-4 py-2 px-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-200 text-sm flex items-center justify-center">
                         <i data-lucide="info" class="w-4 h-4 mr-2"></i>
                         How to Claim This Item
                     </button>`;
+                    
+                // **NEW ADMIN BUTTON** (Only visible if IS_ADMIN_MODE is true)
+                if (IS_ADMIN_MODE) {
+                    claimButtonHtml += `
+                        <button 
+                            onclick="markAsClaimed('${report.id}')"
+                            class="w-full mt-2 py-2 px-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-200 text-xs flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-4 h-4 mr-2"></i>
+                            Admin: Mark as Claimed
+                        </button>`;
+                }
             }
             
             const cardHtml = `
@@ -438,7 +505,7 @@
         lucide.createIcons();
     }
     
-    // --- Modal & UI Functions ---
+    // --- Modal & UI Functions (No changes needed, keeping for completeness) ---
 
     function openReportModal(isLost) {
         isReportingLost = isLost;
